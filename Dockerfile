@@ -10,21 +10,19 @@ RUN apt-get update && apt-get install -y wget xz-utils perl-modules make perl-do
 
 # Copy custom Texlive profile
 COPY texlive_docker.profile /app/texlive.profile
-COPY ./build /app/build
 
 # Download and install Texlive
 RUN <<EOF
     set -e
+    mkdir -p /app/build/.texlive; \
     wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
     tar -xzf install-tl-unx.tar.gz && \
     cd install-tl-* && \
     ./install-tl --profile=/app/texlive.profile > /app/installation.log && \
     cd .. && \
     rm -rf install-tl-* install-tl-unx.tar.gz
-    ls /app/build -al
 EOF
 
-RUN cat /app/installation.log
 # Stage 2: Final Image
 FROM texlive as final
 
@@ -32,15 +30,17 @@ FROM texlive as final
 COPY --from=texlive /app/build /app/build
 
 # Set environment variables
-ENV PATH="/app/build/.texlive/bin/${ARCH_DIR}:${PATH}"
+ENV PATH="/app/build/.texlive/bin/aarch64-linux:${PATH}"
+
+RUN echo $ARCH_DIR
 
 COPY ./texlive.packages /app/
 
-RUN env PATH="$PATH" tlmgr install $(cat texlive.packages)
+RUN echo $PATH
+
+RUN env PATH="$PATH" tlmgr install $(cat /app/texlive.packages)
 
 # Set work directory
 WORKDIR /app
 
 CMD ["sh"]
-
-# Rest of the Dockerfile...
