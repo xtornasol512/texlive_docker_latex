@@ -1,5 +1,5 @@
 # Stage 1: Install Texlive
-FROM amd64/python:3.9.16-buster AS texlive
+FROM python:3.9.16-buster AS texlive
 
 # Set work directory
 WORKDIR /app
@@ -32,7 +32,11 @@ FROM texlive as final
 COPY --from=texlive /app/build /app/build
 
 # Set environment variables
-ENV PATH="/app/build/.texlive/bin/x86_64-linux:${PATH}"
+ENV PATH="/app/build/.texlive/bin/${ARCH_TYPE}:${PATH}"
+
+COPY ./texlive.packages /app/
+
+RUN env PATH="$PATH" tlmgr install $(cat texlive.packages)
 
 # Set work directory
 WORKDIR /app
