@@ -32,7 +32,7 @@ FROM texlive as final
 COPY --from=texlive /app/build /app/build
 
 # Set environment variables
-ENV PATH="/app/build/.texlive/bin/${ARCH_TYPE}:${PATH}"
+ENV PATH="/app/build/.texlive/bin/${ARCH_DIR}:${PATH}"
 
 COPY ./texlive.packages /app/
 
