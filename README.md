@@ -13,7 +13,7 @@ TODO add tlmgr install packages
 
 RUN the image
 
-`$ docker build --build-arg ARCH_DIR=aarch64-linux -f Dockerfile -t latex_install:mytag . > build.log`
+`$ docker build -f Dockerfile -t latex_install:mytag . > build.log`
 
 
 Read the notes below to choose the correct ARCH_DIR value
@@ -42,3 +42,5 @@ To see what your architecture is, type the following command:
 
 FOR Apple sillicon the ARCH_TYPE value is: aarch64-linux
 FOR intel and amd chips is okay using: x86_64-linux
+
+Change line 32 according to your machine: ENV ARCH_DIR=<docker-architecture>

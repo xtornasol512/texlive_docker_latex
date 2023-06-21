@@ -29,8 +29,9 @@ FROM texlive as final
 # Copy Texlive installation from the previous stage
 COPY --from=texlive /app/build /app/build
 
+ENV ARCH_DIR=aarch64-linux
 # Set environment variables
-ENV PATH="/app/build/.texlive/bin/aarch64-linux:${PATH}"
+ENV PATH="/app/build/.texlive/bin/${ARCH_DIR}:${PATH}"
 
 RUN echo $ARCH_DIR
 
